@@ -78,11 +78,11 @@ const deletecategories = async (req, res) => {
         })
     }
 }
-const updatecategories = async (req,res) => {
-//    console.log("dhuwhfhf",req.params.category_id,req.body);
+const updatecategories = async (req, res) => {
+    //    console.log("dhuwhfhf",req.params.category_id,req.body);
     try {
-        const category = await Categories.findByIdAndUpdate(req.params.category_id,req.body,{new:true,runValidators:true})
-       
+        const category = await Categories.findByIdAndUpdate(req.params.category_id, req.body, { new: true, runValidators: true })
+
         if (!category) {
             res.status(400).json({
                 success: false,
@@ -96,7 +96,7 @@ const updatecategories = async (req,res) => {
             data: category
         })
 
-    } catch (error) {   
+    } catch (error) {
         res.status(500).json({
             success: false,
             message: "internal server error" + error.message

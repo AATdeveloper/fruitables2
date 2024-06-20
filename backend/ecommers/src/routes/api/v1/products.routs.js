@@ -11,24 +11,24 @@ routes.get(
 )
 
 routes.get(
-    '/get-products/:product_id',
+    '/get-products/:product_id', 
     productsController.getproducts
 )
 
 routes.post(
-    '/add-products',
+    '/add-products', 
     upload.single("product_img"),
     productsController.addproducts
 )
 
 routes.put(
-    '/update-products/:product_id',
+    '/update-products/:product_id', 
     upload.single("product_img"),
     productsController.updateproducts
 )
 
 routes.delete(
-    '/delete-products/:product_id',
+    '/delete-products/:product_id', 
     productsController.deleteproducts
 )
 

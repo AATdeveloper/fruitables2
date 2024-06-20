@@ -1,8 +1,8 @@
 const cloudinary = require("cloudinary").v2
 
 cloudinary.config({
-    cloud_name: " dx9kem9xm",
-    api_key: "359873264534757",
+    cloud_name: "dggzpcl2s",
+    api_key: "457265955788232",
     api_secret: "5Dp92rWfExuO57FdTwvCuMbxK4w" // Click 'View Credentials' below to copy your API secret
 });
 
