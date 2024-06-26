@@ -64,11 +64,10 @@
     $unwind: "$posts"
   },
   {
-    $unwind: "$posts.likes"
-  },
-  {
     $group: {
       _id: "$_id",
+      name:{$first:"$name"},        //for name
+
       NoOfLikes: {
         $sum:"$posts.likes"
       }
@@ -77,38 +76,745 @@
 ]
 6. Find the user name with the maximum likes of posts.
 [
+  { "$unwind": "$posts" },
   {
-     $unwind: "$posts"
-   },
-   {
-     $group: {
-       _id: "$name",
-       
-       NoOfLikes:{
-         $sum:"$posts.likes"
-       }
-     }
-   },{
-     $sort: {
-       NoOfLikes: -1
-     }
-   },{
-     $limit: 1
-   }
- ]
+    "$group": {
+      "_id": "$name",
+      "totalLikes": { "$sum": "$posts.likes" }
+    }
+  },
+  { "$sort": { "totalLikes": -1 } },
+  { "$limit": 1 }
+]
+
 7. Count the number of active and inactive users.
+[
+  {
+    "$group": {
+      "_id": "$isActive",
+      "count": { "$sum": 1 }
+    }
+  }
+]
+
 8. List the cities with the highest average age.
+[
+  {
+    "$group": {
+      "_id": "$city",
+      "averageAge": { "$avg": "$age" }
+    }
+  },
+  {
+    "$sort": { "averageAge": -1 }
+  }
+]
+
 9. Count the number of users in each city.
+[
+  {
+    "$group": {
+      "_id": "$city",
+      name:{$first:"$name"},
+      "count": { "$sum": 1 }
+    }
+  }
+]
+
 10. Count the number of users with JavaScript skills.
+[
+  {
+    "$match": {
+      "skills": "JavaScript"
+    }
+  },
+  {
+    "$count": "totalUsersWithJavaScriptSkills"
+  }
+]
+
 11. Count the number of users with each skill.
+
+[
+  { "$unwind": "$skills" },
+  { 
+    "$group": { 
+      "_id": "$skills",
+      "count": { "$sum": 1 }
+    } 
+  }
+]
+
 12. Find users who have posts with more than 15 likes and a specific skill.
+[
+  {
+    $unwind:"$posts"
+  },
+  {
+    $match: {
+      $and:[
+        {"posts.likes" : {$gt : 15}},
+        {"skills":"React"}
+      ]
+    }
+  }
+]
 13. Find users with the highest total number of likes across all posts.
+[
+  {
+    "$unwind": "$posts"
+  },
+  {
+    "$group": {
+      "_id": "$_id",
+      "name": { "$first": "$name" },
+      "total_likes": { "$sum": "$posts.likes" }
+    }
+  },
+  {
+    "$sort": { "total_likes": -1 }
+  },
+  {
+    "$limit": 1
+  }
+]
+
 14. Find users who have friends and count the number of friends.
+[
+  {
+    $match: {
+      friends: {
+        $exists: true,
+        $not: { $size: 0 }
+      }
+    }
+  },
+  {
+    $project: {
+      name: 1,
+      friendCount: { $size: "$friends" }
+    }
+  }
+]
+
+
 15. Find users who have at least one post with a specific comment and a specific skill.
+[
+  {
+    $unwind: "$posts"
+  },
+  {
+    $unwind: "$posts.comments"
+  },
+  {
+    $match: {
+      $and: [
+        { "posts.comments": "specific comment" },
+        { skills: "specific skill" }
+      ]
+    }
+  }
+]
+
+
 16. Count users who have skills javascript and react.
-17. count user who have second skills as React
+[
+  {
+    $match: {
+      skills: { $all: ["JavaScript", "React"] }
+    }
+  },
+  {
+    $count: "JavaScriptAndReactSkills"
+  }
+]
+
+
+17. count user who have second skills as React.
+[
+  {
+    $project: {
+      secondSkill: {
+        $arrayElemAt: ["$skills", 1]
+      }
+    }
+  },
+  {
+    $match: {
+      secondSkill: "React"
+    }
+  }
+]
+
 18. Categorise users by their city and gives their id and name.
+[
+  {
+    $group: {
+      _id: "$city",
+      users: {
+        $push: {
+          _id: "$_id",
+          name: "$name"
+        }
+      }
+    }
+  }
+]
+
+
 19. Give user data whose city name starts with "New".
+ 
+
+
 20. Add a "postCount" field representing the total number of posts for each user.
+[
+  {
+    $project: {
+      name: 1,
+      postCount: { $size: "$posts" }
+    }
+  }
+]
+
 21. Add a "friendNames" field with the names of friends for each user.
+[
+  {
+    $lookup: {
+      from: "users",
+      localField: "friends",
+      foreignField: "_id",
+      as: "friendNames"
+    }
+  },
+  {
+    $project: {
+      name: 1,
+      "friendNames.name": 1
+    }
+  }
+]
+
 22. Display posts data that have more than 1 comments.
+[
+  {
+    $unwind: "$posts"
+  },
+  {
+    $project: {
+      posts: 1,
+      commentCount: { $size: "$posts.comments" }
+    }
+  },
+  {
+    $match: {
+      commentCount: { $gt: 1 }
+    }
+  }
+]
+
+<--------------------------------------------------------------------->
+
+1. Find the total number of active categories.
+
+[
+  {
+    $match: {
+      "isActive":true
+    }
+  },
+  {
+    $count: 'NoOfActive'
+  }
+]
+---------------------------------------------------------------------
+
+2. Retrieve the list of users who have made more than 3 orders. //order
+
+[
+  {
+    $group: {
+      _id:"$user_id",
+     ordercount:{
+       $sum:1
+     }
+      }
+    },
+  {
+    $match: {
+      ordercount:{
+        $gt:1
+      }
+    }
+  },
+  {
+    $lookup: {
+      from: "users",
+      localField: "_id",
+      foreignField: "_id",
+      as: "userdetails"
+    }
+  },
+  {
+     $unwind:"$userdetails"
+  },
+  {
+    $project: {
+      _id:0,
+      "userdetails.name":1,
+       "userdetails.mobile_no":1,
+       "userdetails.email":1,
+      ordercount:1,
+   
+      
+    }
+  }
+ 
+]
+---------------------------------------------------------------------
+3. Calculate the total revenue generated by each seller.  // order
+ [
+  {
+    $group: {
+      _id: "$seller_id",
+      total_revenue: {
+        $sum: "$total_amount"
+      }
+    }
+  },
+  {
+    $lookup: {
+      from: "users",
+      localField: "_id",
+      foreignField: "_id",
+      as: "sellerdetails"
+    }
+  },
+  {
+    $unwind: "$sellerdetails"
+  },
+  {
+    $project: {
+      _id: 0,
+      "sellerdetails.name": 1,
+      "sellerdetails.mobile_no": 1,
+      "sellerdetails.email": 1,
+      total_revenue: 1
+    }
+  }
+]
+
+---------------------------------------------------------------------
+4. Retrieve the products with the highest average rating. // reviews
+[
+    {
+      $group: {
+        _id: "$product_id",
+        averageRating: {
+          $avg: "$rating"
+            }
+        }
+    },
+    {
+      $sort: {
+        averageRating: -1
+        }
+    },
+    {
+      $limit: 1
+    },
+    {
+      $lookup: {
+        from: "products",
+        localField: "_id",
+        foreignField: "_id",
+        as: "productDetails"
+        }
+    },
+    {
+      $unwind: "$productDetails"
+    },
+    {
+      $project: {
+        _id: 0,
+        productId: "$_id",
+        productName: "$productDetails.name",
+        averageRating: 1
+        }
+    }
+]
+---------------------------------------------------------------------
+5. Calculate the total number of products in each subcategory . // products
+
+[
+  {
+    $group: {
+      _id: "$subcategory",
+      allproducts: {
+        $sum: 1
+      }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      subcategory: "$_id",
+      allproducts: 1
+    }
+  }
+]
+---------------------------------------------------------------------
+
+6. Find the users who have not made any orders. //user
+[
+  {
+    $lookup: {
+      from: "orders",
+      localField: "_id",
+      foreignField: "user_id",
+      as: "orders"
+    }
+  },
+  {
+    $match: {
+      orders: {
+        $size: 0
+      }
+    }
+  }
+]
+---------------------------------------------------------------------
+
+7. Identify the most popular product (highest number of reviews). //reviews
+[
+  {
+    $lookup: {
+      from: "reviews",
+      localField: "_id",
+      foreignField: "product_id",
+      as: "reviews"
+    }
+  },
+  {
+    $addFields: {
+      reviewsCount: { $size: "$reviews" }
+    }
+  },
+  {
+    $sort: {
+      reviewsCount: -1
+    }
+  },
+  {
+    $limit: 1
+  },
+  {
+    $project: {
+      _id: 0,
+      name: 1,
+      reviewsCount: 1,
+      reviews: {
+        $slice: ["$reviews", 5]
+      }
+    }
+  }
+]
+---------------------------------------------------------------------
+7.1 Identify the most popular product (highest number of orders). //order
+[
+  {
+    $unwind: "$products"
+  },
+  {
+    $group: {
+      _id: "$products.product_id",
+      ordersCount: { $sum: "$products.quantity" }
+    }
+  },
+  {
+    $sort: {
+      ordersCount: -1
+    }
+  },
+  {
+    $limit: 5
+  },
+  {
+    $lookup: {
+      from: "products",
+      localField: "_id",
+      foreignField: "_id",
+      as: "product"
+    }
+  },
+  {
+    $unwind: "$product"
+  },
+  {
+    $project: {
+      _id: 0,
+      name: "$product.name",
+      ordersCount: 1
+    }
+  }
+]
+---------------------------------------------------------------------
+8. Calculate the total revenue and average order value for each seller. // order 
+[
+  {
+    $group: {
+      _id: "$seller_id",
+      totalRevenue: {
+        $sum: "$total_amount"
+      },
+      averageOrderValue: {
+        $avg: "$total_amount"
+      },
+      orderCount: {
+        $sum: 1
+      }
+    }
+  },
+  {
+    $lookup: {
+      from: "users",
+      localField: "_id",
+      foreignField: "_id",
+      as: "sellerDetails"
+    }
+  },
+  {
+    $unwind: "$sellerDetails"
+  },
+  {
+    $project: {
+      _id: 0,
+      seller_id: "$_id",
+      seller_name: "$sellerDetails.name",
+      totalRevenue: 1,
+      averageOrderValue: 1,
+      orderCount: 1
+    }
+  }
+]
+
+---------------------------------------------------------------------
+9. Find the products with a quantity less than 20 in the Variant collection. // veriant
+
+[
+  {
+    $match: {
+      "attributes.Quantity": {
+        $lt: 20
+      }
+    }
+  },
+  {
+    $project: {
+      _id: 1,
+      product_id: 1,
+      "attributes.Color": 1,
+      "attributes.Size": 1,
+      "attributes.Price": 1,
+      "attributes.Quantity": 1
+    }
+  }
+]
+---------------------------------------------------------------------
+10. Retrieve the top 5 customers with the highest total order value. //order
+[
+  {
+    $group: {
+      _id: "$user_id",
+      totalOrderValue: {
+        $sum: "$total_amount"
+      }
+    }
+  },
+  {
+    $sort: {
+      totalOrderValue: -1
+    }
+  },
+  {
+    $limit: 5
+  },
+  {
+    $lookup: {
+      from: "users",
+      localField: "_id",
+      foreignField: "_id",
+      as: "orders"
+    }
+  },
+  {
+    $unwind: "$orders"
+  },
+  {
+    $project: {
+      _id: 0,
+      user_id: "$_id",
+      totalOrderValue: 1,
+      "orders.name": 1,
+      "orders.email": 1,
+      "orders.address": 1,
+      "orders.mobile_no": 1
+    }
+  }
+]
+
+
+---------------------------------------------------------------------
+11. Find the average rating for each product.
+[
+  {
+    $group: {
+      _id: "$product_id",
+      avg_rating: {
+        $avg: "$rating"
+      }
+    }
+  },
+  {
+    $lookup: {
+      from: "products",
+      localField: "_id",
+      foreignField: "_id",
+      as: "product_details"
+    }
+  },
+  {
+    $unwind: "$product_details"
+  },
+  {
+    $project: {
+      _id: "$_id",
+      product_name: "$product_details.name",
+      avg_rating: 1
+    }
+  }
+]
+
+---------------------------------------------------------------------
+12. Retrieve the latest 5 reviews with user details.
+
+[
+  {
+    $sort: { _id: -1 }
+  },
+  {
+    $limit: 5
+  },
+  {
+    $lookup: {
+      from: "users",
+      localField: "user_id",
+      foreignField: "_id",
+      as: "user_details"
+    }
+  },
+  {
+    $unwind: "$user_details"
+  },
+  {
+    $project: {
+      _id: 1,
+      product_id: 1,
+      rating: 1,
+      comment: 1,
+      "user_details.name": 1,
+      "user_details.email": 1
+    }
+  }
+]
+
+---------------------------------------------------------------------
+13. Identify the users who have items in their cart with a quantity greater than 5.
+
+[
+  {
+    $unwind: "$items"
+  },
+  {
+    $match: {
+      "items.quantity": { $gt: 5 }
+    }
+  },
+  {
+    $lookup: {
+      from: "users",
+      localField: "user_id",
+      foreignField: "_id",
+      as: "user_details"
+    }
+  },
+  {
+    $unwind: "$user_details"
+  },
+  {
+    $group: {
+      _id: "$user_id",
+      user_details: { $first: "$user_details" }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      user_id: "$_id",
+      name: "$user_details.name",
+      email: "$user_details.email"
+    }
+  }
+]
+
+---------------------------------------------------------------------
+
+14. Calculate the total number of orders placed using each payment gateway.
+
+  [
+    {
+      $group: {
+        _id: "$gateway",
+        total_orders: { $sum: 1 }
+      }
+    }
+  ]
+
+---------------------------------------------------------------------
+15. Find the subcategories with no active products.
+
+[
+  {
+    $lookup: {
+      from: "products",
+      localField: "_id",
+      foreignField: "subcategory_id",
+      as: "products"
+    }
+  },
+  {
+    $match: {
+      products: { $size: 0 }
+    }
+  },
+  {
+    $project: {
+      _id: 1,
+      subcategory_name: 1,
+      subcategory_desc: 1
+    }
+  }
+]
+
+---------------------------------------------------------------------
+16. Retrieve the orders with a total amount greater than 2000 and status as "Completed."
+17. Identify the products that have not been reviewed.
+18. Calculate the total revenue and total quantity sold for each product.
+19. Find the top 3 subcategories with the highest average product price.
+20. Retrieve the products that have received reviews with ratings greater than 4.
+21. Retrieve product data with their variant details from category.
+22. Retrieve Categories with Subcategory, Products with product count.
+23. Retrieve Payments with Order and Product Details.
+
+
+
+
