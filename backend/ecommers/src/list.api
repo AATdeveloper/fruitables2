@@ -664,7 +664,7 @@
 
 
 ---------------------------------------------------------------------
-11. Find the average rating for each product.
+11. Find the average rating for each product. //review
 [
   {
     $group: {
@@ -695,7 +695,7 @@
 ]
 
 ---------------------------------------------------------------------
-12. Retrieve the latest 5 reviews with user details.
+12. Retrieve the latest 5 reviews with user details. // review
 
 [
   {
@@ -727,48 +727,51 @@
   }
 ]
 
----------------------------------------------------------------------
-13. Identify the users who have items in their cart with a quantity greater than 5.
-
+--------------------------------------------------------------------- 
+13. Identify the users who have items in their cart with a quantity greater than 5.  //cart
 [
   {
     $unwind: "$items"
   },
   {
+    $group:{
+      _id: "$user_id",
+      "countQty":{
+        $sum: "$items.quantity"
+      }
+    }
+  },
+  {
     $match: {
-      "items.quantity": { $gt: 5 }
+      "countQty": { $gt: 3 }
     }
   },
   {
     $lookup: {
       from: "users",
-      localField: "user_id",
+      localField: "_id",
       foreignField: "_id",
-      as: "user_details"
+      as: "user"
     }
   },
   {
-    $unwind: "$user_details"
-  },
-  {
-    $group: {
-      _id: "$user_id",
-      user_details: { $first: "$user_details" }
-    }
+    $unwind: "$user"
   },
   {
     $project: {
       _id: 0,
-      user_id: "$_id",
-      name: "$user_details.name",
-      email: "$user_details.email"
+      "countQty":1,
+      "user.name":1,
+      
+     
+      
     }
   }
 ]
 
 ---------------------------------------------------------------------
 
-14. Calculate the total number of orders placed using each payment gateway.
+14. Calculate the total number of orders placed using each payment gateway. // payment
 
   [
     {
@@ -780,7 +783,7 @@
   ]
 
 ---------------------------------------------------------------------
-15. Find the subcategories with no active products.
+15. Find the subcategories with no active products. //subcategories
 
 [
   {
@@ -792,28 +795,147 @@
     }
   },
   {
+    $unwind: "$products"
+  },
+  {
     $match: {
-      products: { $size: 0 }
+      "products.isActive": false
     }
   },
   {
-    $project: {
-      _id: 1,
-      subcategory_name: 1,
-      subcategory_desc: 1
+    $group: {
+      _id: "$_id",
+      subcategory_name: {
+        $first:"$subcategory_name"
+      },
+      products:{
+      $push:"$products"
+      }
+    }
+  },
+  
+]
+---------------------------------------------------------------------
+16. Retrieve the orders with a total amount greater than 2000 and status as "Completed."
+
+[
+  {
+    "$match": {
+      status:"Completed",
+      total_amount: { "$gt": 2000 }
+      
     }
   }
 ]
 
+
 ---------------------------------------------------------------------
-16. Retrieve the orders with a total amount greater than 2000 and status as "Completed."
 17. Identify the products that have not been reviewed.
-18. Calculate the total revenue and total quantity sold for each product.
+[
+  {
+    "$lookup": {
+      "from": "reviews",
+      "localField": "_id",
+      "foreignField": "product_id",
+      "as": "reviews"
+    }
+  },
+  {
+    "$match": {
+      "reviews": { "$size": 0 }
+    }
+  },
+  {
+    "$project": {
+      "_id": 1,
+      "name": 1,
+      "description": 1
+    }
+  }
+]
+
+
+---------------------------------------------------------------------
+18. Calculate the total revenue and total quantity sold for each product. 
+
+[
+  {
+    "$group": {
+      "_id": "$product_id",
+      "total_revenue": { "$sum": "$total_amount" },
+      "total_quantity": { "$sum": "$quantity" }
+      }
+      }
+      ]
+
+
+---------------------------------------------------------------------
 19. Find the top 3 subcategories with the highest average product price.
+
+
+---------------------------------------------------------------------
 20. Retrieve the products that have received reviews with ratings greater than 4.
-21. Retrieve product data with their variant details from category.
+
+
+
+---------------------------------------------------------------------
+21. Retrieve product data with their variant details from category. //categories
+[
+  {
+    "$lookup": {
+      "from": "products",
+      "localField": "_id",
+      "foreignField": "category_id",
+      "as": "products",
+      "pipeline": [
+        {
+          "$lookup": {
+            "from": "variants",
+            "localField": "_id",
+            "foreignField": "product_id",
+            "as": "variants"
+            }
+        }
+      
+        
+      ]
+
+      }
+  },
+  {
+    "$unwind": "$products"
+    },
+    {
+      "$unwind": "$products.variants"
+      },
+      {
+        "$project": {
+          "category_id": 1,
+          "category_name": 1,
+          "products": 1,
+          "variants": 1
+          }
+          }
+
+]
+
+
+
+
+
+---------------------------------------------------------------------
 22. Retrieve Categories with Subcategory, Products with product count.
+
+
+
+---------------------------------------------------------------------
 23. Retrieve Payments with Order and Product Details.
+
+
+
+
+
+---------------------------------------------------------------------
 
 
 
