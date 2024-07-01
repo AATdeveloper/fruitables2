@@ -191,7 +191,7 @@ const updateproducts = async (req, res) => {
 
     //     res.status(200).json({
     //         success: true,
-    //         message: "Product Update sucessfully",
+    //         message: "Products Update sucessfully",
     //         data: product
     //     })
 
@@ -203,10 +203,171 @@ const updateproducts = async (req, res) => {
     // }
 }
 
+const Topratedpro = async (req, res) => {
+
+    const activeCount = await Products.aggregate([
+        [
+            {
+              $group: {
+                _id: "$product_id",
+                averageRating: {
+                  $avg: "$rating"
+                    }
+                }
+            },
+            {
+              $sort: {
+                averageRating: -1
+                }
+            },
+            {
+              $limit: 5
+            },
+            {
+              $lookup: {
+                from: "products",
+                localField: "_id",
+                foreignField: "_id",
+                as: "productDetails"
+                }
+            },
+            {
+              $unwind: "$productDetails"
+            },
+            {
+              $project: {
+                _id: 0,
+                productId: "$_id",
+                productName: "$productDetails.name",
+                averageRating: 1
+                }
+            }
+        ]
+        
+          
+          
+    ])
+    res.status(200).json({
+        success: true,
+        message: "Products get sucessfully",
+        data: activeCount
+    })
+    console.log(activeCount);
+
+}
+
+
+
+// const mostproducts = async (req, res) => {
+
+//     const activeCount = await Subcategories.aggregate([
+//         [
+//     {
+//       $match: {
+//         discount: { $gt: 0 }
+//       }
+//     },
+//     {
+//       $project: {
+//         _id: 1,
+//         name: 1,
+//         description: 1,
+//         price: 1,
+//         discount: 1
+//       }
+//     },
+//     {
+//       $sort: {
+//         discount: -1
+//       }
+//     }
+    
+//   ]
+//     ])
+//     res.status(200).json({
+//         success: true,
+//         message: "Products get sucessfully",
+//         data: activeCount
+//     })
+//     console.log(activeCount);
+
+// }
+
 module.exports = {
     listproducts,
     getproducts,
     addproducts,
     deleteproducts,
-    updateproducts
+    updateproducts,
+    Topratedpro
 }
+
+
+
+
+//   /products/top-rated                                     //Retrieve products with the highest ratings.
+// [
+//     {
+//       $group: {
+//         _id: "$product_id",
+//         averageRating: {
+//           $avg: "$rating"
+//             }
+//         }
+//     },
+//     {
+//       $sort: {
+//         averageRating: -1
+//         }
+//     },
+//     {
+//       $limit: 5
+//     },
+//     {
+//       $lookup: {
+//         from: "products",
+//         localField: "_id",
+//         foreignField: "_id",
+//         as: "productDetails"
+//         }
+//     },
+//     {
+//       $unwind: "$productDetails"
+//     },
+//     {
+//       $project: {
+//         _id: 0,
+//         productId: "$_id",
+//         productName: "$productDetails.name",
+//         averageRating: 1
+//         }
+//     }
+// ]
+
+
+
+
+//   /products/discounts                                     //Retrieve products currently on sale.
+// [
+//     {
+//       $match: {
+//         discount: { $gt: 0 }
+//       }
+//     },
+//     {
+//       $project: {
+//         _id: 1,
+//         name: 1,
+//         description: 1,
+//         price: 1,
+//         discount: 1
+//       }
+//     },
+//     {
+//       $sort: {
+//         discount: -1
+//       }
+//     }
+    
+//   ]
+  

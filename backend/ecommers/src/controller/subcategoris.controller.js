@@ -157,11 +157,184 @@ const deletesubcategory = async (req, res) => {
     }
 }
 
+
+const countactsubcategories = async (req, res) => {
+
+    const activeCount = await Subcategories.aggregate([
+        [
+            {       $match: {
+              isActive:true
+            }
+          },
+          {
+            $count: 'Noofcategories'
+            },
+         
+         ]
+    ])
+    res.status(200).json({
+        success: true,
+        message: "Category get sucessfully",
+        data: activeCount
+    })
+    console.log(activeCount);
+
+}
+
+
+
+const mostproducts = async (req, res) => {
+
+    const activeCount = await Subcategories.aggregate([
+        [
+            {
+              "$match": {
+                 "isActive": true
+               }
+             },
+             {
+              "$lookup": {
+                "from": "products",
+                "localField": "_id",
+                "foreignField": "subcategory_id",
+                "as": "products"
+              }
+            },
+            {
+              "$project": {
+                "subcategoryName": "$name",
+                "productCount": { "$size": "$products" }
+              }
+            },
+            {
+              "$sort": {
+                "productCount": -1
+              }
+            },
+            {
+              "$limit": 5
+            }
+          ]
+    ])
+    res.status(200).json({
+        success: true,
+        message: "Products get sucessfully",
+        data: activeCount
+    })
+    console.log(activeCount);
+
+}
+
+
+
+
+
+const inactivesubcategory = async (req, res) => {
+
+    const activeCount = await Subcategories.aggregate([
+        [
+            {       $match: {
+              isActive:false
+            }
+          }
+        ]
+    ])
+    res.status(200).json({
+        success: true,
+        message: "in active sub categories get sucessfully",
+        data: activeCount
+    })
+    console.log(activeCount);
+
+}
+
 module.exports = {
     subcategorieslist,
     getsubcategory,
     addsubcategory,
     putsubcategories,
     deletesubcategory,
-    getsubCategorybyCategory
+    getsubCategorybyCategory,
+    countactsubcategories,
+    mostproducts,
+    inactivesubcategory
 }
+
+
+
+//   /subcategory/count-active                           //Retrieve the total count of active 
+// [
+//     {       $match: {
+//       isActive:true
+//     }
+//   },
+//   {
+//     $count: 'Noofsubcategories'
+//     },
+ 
+//  ]
+
+
+// /subcategory/most-products                          //Retrieve subcategories with the highest number of products.
+
+// [
+//     {
+//         "$match": {
+//           "isActive": true
+//         }
+//       },
+//       {
+//         "$lookup": {
+//           "from": "products",  
+//           "localField": "_id", 
+//           "foreignField": "category_id",
+//           "as": "products"
+//         }
+//       },
+//       {
+//         "$project": {
+//           "categoryName": "$name",  
+//           "productCount": { "$size": "$products" }
+//         }
+//       },
+//       {
+//         "$sort": {
+//           "productCount": -1  
+//         }
+//       },
+//       {
+//         "$limit": 3 
+//       }
+//     ]
+
+//   /subcategory/inactive                               //Retrieve a list of inactive subcategories.
+// [
+//     {       $match: {
+//       isActive:false
+//     }
+//   }
+// ]
+
+
+// /subcategory/count-products                         //Retrieve the count of products for each subcategory.?
+// [
+//     {
+//         "$match": {
+//           "isActive": true
+//         }
+//       },
+//       {
+//         "$lookup": {
+//           "from": "products",
+//           "localField": "_id",
+//           "foreignField": "category_id",
+//           "as": "products"
+//         }
+//       },
+//       {
+//         "$project": {
+//           "categoryName": "$name",
+//           "productCount": { "$size": "$products" }
+//         }
+//       }
+//     ]

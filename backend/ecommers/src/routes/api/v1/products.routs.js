@@ -7,7 +7,7 @@ const routes = express.Router();
 //localhost:3000/api/v1/products/list-products
 routes.get(
     '/list-products',
-    productsController.listproducts
+    productsController.Topratedpro
 )
 
 routes.get(

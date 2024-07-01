@@ -5,7 +5,7 @@ const routes = express.Router();
 
 routes.get(
     '/categories-list',  
-    categoriescontroller.listcategories
+    categoriescontroller.totalproducts
 )
 
 routes.post('/categories-add',
@@ -19,6 +19,40 @@ routes.put('/categories-update/:category_id',
 routes.delete('/categories-delete/:category_id',
     categoriescontroller.deletecategories
 )
+
+routes.get(
+    '/countcategories',  
+    categoriescontroller.countcategories,
+
+)
+
+
+routes.get(
+    '/mostprocat',  
+    categoriescontroller.mostprocat,
+
+)
+
+routes.get(
+    '/totalproducts',  
+    categoriescontroller.totalproducts,
+
+)
+
+routes.get(
+    '/inactivecategories',  
+    categoriescontroller.inactivecategories,
+
+)
+
+routes.get(
+    '/countsubcategories',  
+    categoriescontroller.countsubcategories,
+
+)
+
+ 
+
 
 
 module.exports = routes;
