@@ -21,6 +21,8 @@ import ReviewsIcon from '@mui/icons-material/Reviews';
 import { NavLink } from 'react-router-dom';
 import CategoryIcon from '@mui/icons-material/Category';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
+import AnimationIcon from '@mui/icons-material/Animation';
+import ArchiveIcon from '@mui/icons-material/Archive';
 
 
 const drawerWidth = 240;
@@ -95,7 +97,8 @@ let adminlink = [
   { title: "Products", icon: <AppleIcon />, to: "/admin/product" },
   { title: "Reviews", icon: <ReviewsIcon />, to: "/admin/review" },
   { title: "Category", icon: <CategoryIcon />, to: "/admin/category" },
-  { title: "SubCategory", icon: <CategoryIcon />, to: "/admin/subcategory" },
+  { title: "SubCategory", icon: <ArchiveIcon />, to: "/admin/subcategory" },
+  { title: "Variant", icon: <AnimationIcon />, to: "/admin/variants" },
   { title: "Facilites", icon: <WarehouseIcon />, to: "/admin/facilites" },
   { title: "Counter", icon: <AppleIcon />, to: "/admin/counter" },
   { title: "Coupan", icon: <ReviewsIcon />, to: "/admin/coupan" },

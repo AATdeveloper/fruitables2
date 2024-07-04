@@ -278,3 +278,157 @@ console.log(categories);
         </>
     );
 }
+
+
+// import React, { useState, useEffect } from 'react';
+// import Button from '@mui/material/Button';
+// import TextField from '@mui/material/TextField';
+// import Dialog from '@mui/material/Dialog';
+// import DialogActions from '@mui/material/DialogActions';
+// import DialogContent from '@mui/material/DialogContent';
+// import DialogTitle from '@mui/material/DialogTitle';
+// import { useFormik } from 'formik';
+// import { object, string } from 'yup';
+// import { DataGrid } from '@mui/x-data-grid';
+// import IconButton from '@mui/material/IconButton';
+// import DeleteIcon from '@mui/icons-material/Delete';
+// import EditIcon from '@mui/icons-material/Edit';
+// import { getData, handleAdd, handleUpdateData, handledelete } from '../../../redux/action/category.action'; // Adjusted import paths
+// // import { getData, handleAdd, handleUpdateData, handledelete } from '../../../redux/action/category.action';
+// import { useDispatch, useSelector } from 'react-redux';
+
+// export default function Category() {
+//   const [open, setOpen] = useState(false);
+//   const [updateId, setUpdateId] = useState(null);
+//   const dispatch = useDispatch();
+//   const categories = useSelector(state => state.categories.categories);
+
+//   useEffect(() => {
+//     dispatch(getData());
+//   }, [dispatch]);
+
+//   const handleClickOpen = () => {
+//     setOpen(true);
+//   };
+
+//   const handleClose = () => {
+//     setOpen(false);
+//     formik.resetForm();
+//     setUpdateId(null);
+//   };
+
+//   const categorySchema = object({
+//     name: string().required('Please enter name'),
+//     description: string().required('Please enter description').min(5, 'Description should be at least 5 characters'),
+//   });
+
+//   const formik = useFormik({
+//     initialValues: {
+//       name: '',
+//       description: '',
+//     },
+//     validationSchema: categorySchema,
+//     onSubmit: (values, { resetForm }) => {
+//       if (updateId) {
+//         dispatch(handleUpdateData(updateId, values));
+//       } else {
+//         dispatch(handleAdd(values));
+//       }
+//       resetForm();
+//       handleClose();
+//     },
+//   });
+
+//   const { handleSubmit, handleChange, handleBlur, values, errors, touched } = formik;
+
+//   const handleEdit = (category) => {
+//     setUpdateId(category._id);
+//     setOpen(true);
+//     formik.setValues({
+//       name: category.name,
+//       description: category.description,
+//     });
+//   };
+
+//   const handleDelete = (id) => {
+//     dispatch(handledelete(id));
+//   };
+
+//   const columns = [
+//     { field: 'name', headerName: 'Name', width: 150 },
+//     { field: 'description', headerName: 'Description', width: 250 },
+//     {
+//       field: 'action',
+//       headerName: 'Action',
+//       width: 150,
+//       renderCell: (params) => (
+//         <>
+//           <IconButton aria-label="edit" onClick={() => handleEdit(params.row)}>
+//             <EditIcon />
+//           </IconButton>
+//           <IconButton aria-label="delete" onClick={() => handleDelete(params.row._id)}>
+//             <DeleteIcon />
+//           </IconButton>
+//         </>
+//       ),
+//     },
+//   ];
+
+//   return (
+//     <>
+//       <Button variant="outlined" onClick={handleClickOpen}>
+//         Add Category
+//       </Button>
+//       <Dialog open={open} onClose={handleClose}>
+//         <DialogTitle>{updateId ? 'Update Category' : 'Add Category'}</DialogTitle>
+//         <form onSubmit={handleSubmit}>
+//           <DialogContent>
+//             <TextField
+//               autoFocus
+//               margin="dense"
+//               id="name"
+//               name="name"
+//               label="Category Name"
+//               type="text"
+//               fullWidth
+//               variant="standard"
+//               onChange={handleChange}
+//               onBlur={handleBlur}
+//               value={values.name}
+//               error={errors.name && touched.name}
+//               helperText={errors.name && touched.name ? errors.name : ''}
+//             />
+//             <TextField
+//               margin="dense"
+//               id="description"
+//               name="description"
+//               label="Category Description"
+//               type="text"
+//               fullWidth
+//               variant="standard"
+//               onChange={handleChange}
+//               onBlur={handleBlur}
+//               value={values.description}
+//               error={errors.description && touched.description}
+//               helperText={errors.description && touched.description ? errors.description : ''}
+//             />
+//           </DialogContent>
+//           <DialogActions>
+//             <Button onClick={handleClose}>Cancel</Button>
+//             <Button type="submit">{updateId ? 'Update' : 'Add'}</Button>
+//           </DialogActions>
+//         </form>
+//       </Dialog>
+//       <br /><br />
+//       <div style={{ height: 400, width: '100%' }}>
+//         <DataGrid
+//           rows={categories}
+//           columns={columns}
+//           pageSize={5}
+//           checkboxSelection
+//           disableSelectionOnClick
+//         />
+//       </div>
+//     </>
+//   );
+// }
