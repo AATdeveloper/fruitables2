@@ -21,6 +21,7 @@ import ReviewsIcon from '@mui/icons-material/Reviews';
 import { NavLink } from 'react-router-dom';
 import CategoryIcon from '@mui/icons-material/Category';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 
 const drawerWidth = 240;
@@ -95,6 +96,7 @@ let adminlink = [
   { title: "Products", icon: <AppleIcon />, to: "/admin/product" },
   { title: "Reviews", icon: <ReviewsIcon />, to: "/admin/review" },
   { title: "Category", icon: <CategoryIcon />, to: "/admin/category" },
+  { title: "Variant", icon: <FormatListBulletedIcon />, to: "/admine/variant" },
   { title: "SubCategory", icon: <CategoryIcon />, to: "/admin/subcategory" },
   { title: "Facilites", icon: <WarehouseIcon />, to: "/admin/facilites" },
   { title: "Counter", icon: <AppleIcon />, to: "/admin/counter" },

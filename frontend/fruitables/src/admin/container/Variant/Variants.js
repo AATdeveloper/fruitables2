@@ -11,8 +11,9 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux';
 import { addVariant, deleteVariant, editVariant, getVariant } from '../../../redux/action/variant.action';
 import { getData } from '../../../redux/action/category.action';
-import { getSubData } from '../../../redux/slice/subcategory.slice';
-import { getProduct } from '../../../redux/action/product.action';
+// import { getSubData } from '../../../redux/slice/subcategory.slice';
+import { getProducts } from '../../../redux/action/products.action';
+import { getSubData } from '../../../redux/slice/subCategory.slice';
 
 function Variants(props) {
     const [open, setOpen] = useState(false);
@@ -34,7 +35,7 @@ function Variants(props) {
         dispatch(getVariant());
         dispatch(getData());
         dispatch(getSubData())
-        dispatch(getProduct())
+        dispatch(getProducts())
     }, [dispatch]);
 
     const handleClickOpen = () => {

@@ -1,6 +1,7 @@
-import { ADD_VARIANTS, DELETE_VARIANTS, EDIT_VARIANTS, GET_VARIANTS } from "../ActionTypes";
+// import { ADD_VARIANTS, DELETE_VARIANTS, EDIT_VARIANTS, GET_VARIANTS } from "../ActionTypes";
 import { variantURL } from "../../utils/baseURL"
 import axios from "axios";
+import { ADD_VARIANTS, DELETE_VARIANTS, EDIT_VARIANTS, GET_VARIANTS } from "../ActionType";
 
 // const loadingProducts = () => async (dispatch) => {
 //     dispatch({ type: LOADING_PRODUCTS })
