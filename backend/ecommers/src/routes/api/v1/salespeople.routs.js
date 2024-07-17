@@ -3,7 +3,7 @@ const { salespeopleController } = require("../../../controller");
 
 const routes = express.Router();
 
-routes.get('/getsalespeople',
+routes.get('/get-salespeople',
     salespeopleController.listSalespeople
 
 )

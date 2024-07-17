@@ -22,6 +22,7 @@ import { NavLink } from 'react-router-dom';
 import CategoryIcon from '@mui/icons-material/Category';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import HailIcon from '@mui/icons-material/Hail';
 
 
 const drawerWidth = 240;
@@ -93,6 +94,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 
 let adminlink = [
+  { title: "Salespeople", icon: <HailIcon />, to: "/admin/salespeople" },
   { title: "Products", icon: <AppleIcon />, to: "/admin/product" },
   { title: "Reviews", icon: <ReviewsIcon />, to: "/admin/review" },
   { title: "Category", icon: <CategoryIcon />, to: "/admin/category" },
