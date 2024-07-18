@@ -5,7 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { object, string } from 'yup';
+import { boolean, object, string } from 'yup';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { DataGrid } from '@mui/x-data-grid';
@@ -13,12 +13,13 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { addSalespeople, editSalespeople, deleteSalespeople, getSalespeople } from '../../../redux/action/salespeople.action';
+import Switch from '@mui/material/Switch';
 
 function Salespeople() {
     const [open, setOpen] = useState(false);
     const [update, setUpdate] = useState(false);
     const [editId, setEditId] = useState(null);
-    
+
     const dispatch = useDispatch();
     const salespeople = useSelector((state) => state.Salespeople.salespeople);
 
@@ -41,20 +42,24 @@ function Salespeople() {
         sname: string().required('Sname is required'),
         city: string().required('City is required'),
         comm: string().required('Comm is required'),
+        IsActive: boolean().required('Status is required'),
     });
+
+
 
     const formik = useFormik({
         initialValues: {
             sname: '',
             city: '',
             comm: '',
+            IsActive: false,
         },
         validationSchema: SalespeopleSchema,
         onSubmit: async (values, { resetForm }) => {
             if (update) {
-                await dispatch(editSalespeople({ ...values, id: editId }));
+                dispatch(editSalespeople({ ...values, id: editId }));
             } else {
-                await dispatch(addSalespeople(values));
+                dispatch(addSalespeople(values));
             }
             resetForm();
             handleClose();
@@ -62,7 +67,7 @@ function Salespeople() {
     });
 
     const handleDelete = async (snum) => {
-        await dispatch(deleteSalespeople(snum));
+        dispatch(deleteSalespeople(snum));
     };
 
     const handleEdit = (data) => {
@@ -76,6 +81,17 @@ function Salespeople() {
         { field: 'sname', headerName: 'SName', width: 150 },
         { field: 'city', headerName: 'City', width: 150 },
         { field: 'comm', headerName: 'Comm', width: 150 },
+        { field: 'IsActive', headerName: 'IsActive', width: 150,renderCell: (params) => (
+            <Switch
+
+           
+
+            checked={params.row.IsActive}
+            disabled
+          
+        />
+        ),
+        },
         {
             field: 'action',
             headerName: 'Action',
@@ -93,6 +109,17 @@ function Salespeople() {
         },
     ];
 
+
+
+    // const [checked, setChecked] = React.useState(true);
+
+
+    const { handleSubmit, handleChange, handleBlur, errors, values, touched, setFieldValue } = formik;
+
+
+    // const handleChange = (event) => {
+    //     setChecked(event.target.checked);
+    // };
     return (
         <div>
             <Button variant="outlined" onClick={handleClickOpen}>
@@ -144,7 +171,20 @@ function Salespeople() {
                             error={formik.errors.comm && formik.touched.comm}
                             helperText={formik.errors.comm && formik.touched.comm ? formik.errors.comm : ''}
                         />
+
+
+
                     </DialogContent>
+                    <Switch
+
+                        id="IsActive"
+                        name='IsActive'
+
+                        checked={values.IsActive}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                    />
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
                         <Button type="submit">{update ? 'Update' : 'Add'}</Button>
@@ -167,3 +207,4 @@ function Salespeople() {
 }
 
 export default Salespeople;
+

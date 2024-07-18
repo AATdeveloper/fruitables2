@@ -29,11 +29,18 @@ export const deleteSalespeople = (snum) => async (dispatch) => {
     }
 };
 
+
 export const editSalespeople = (data) => async (dispatch) => {
     try {
-        const response = await axios.put(`http://localhost:8000/api/v1//salespeople/update-salespeople/${data.snum}`, data);
-        dispatch({ type: EDIT_SALESPEOPLE, payload: response.data.data });
+        await fetch(`http://localhost:8000/api/v1//salespeople/update-salespeople/${data.snum}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        dispatch({ type: EDIT_SALESPEOPLE, payload: data });
     } catch (error) {
-        console.error("Error editing salespeople:", error);
+        console.error("Failed to update salespeople:", error);
     }
-};
+}
