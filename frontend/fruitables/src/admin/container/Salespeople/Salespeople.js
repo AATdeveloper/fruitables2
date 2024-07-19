@@ -14,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { addSalespeople, editSalespeople, deleteSalespeople, getSalespeople } from '../../../redux/action/salespeople.action';
 import Switch from '@mui/material/Switch';
+import { FormControlLabel, styled } from '@mui/material';
 
 function Salespeople() {
     const [open, setOpen] = useState(false);
@@ -42,7 +43,7 @@ function Salespeople() {
         sname: string().required('Sname is required'),
         city: string().required('City is required'),
         comm: string().required('Comm is required'),
-        IsActive: boolean().required('Status is required'),
+        IsActive: string().required('Status is required'),
     });
 
 
@@ -52,7 +53,7 @@ function Salespeople() {
             sname: '',
             city: '',
             comm: '',
-            IsActive: false,
+            IsActive: 1,
         },
         validationSchema: SalespeopleSchema,
         onSubmit: async (values, { resetForm }) => {
@@ -81,16 +82,13 @@ function Salespeople() {
         { field: 'sname', headerName: 'SName', width: 150 },
         { field: 'city', headerName: 'City', width: 150 },
         { field: 'comm', headerName: 'Comm', width: 150 },
-        { field: 'IsActive', headerName: 'IsActive', width: 150,renderCell: (params) => (
-            <Switch
-
-           
-
-            checked={params.row.IsActive}
-            disabled
-          
-        />
-        ),
+        {
+            field: 'IsActive', headerName: 'Status', width: 80, renderCell: (params) => (
+                <Android12Switch
+                    checked={params.row.IsActive}
+                    disabled
+                />
+            )
         },
         {
             field: 'action',
@@ -120,6 +118,41 @@ function Salespeople() {
     // const handleChange = (event) => {
     //     setChecked(event.target.checked);
     // };
+
+
+    const Android12Switch = styled(Switch)(({ theme }) => ({
+        padding: 8,
+        '& .MuiSwitch-track': {
+            borderRadius: 22 / 2,
+            '&::before, &::after': {
+                content: '""',
+                position: 'absolute',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: 16,
+                height: 16,
+            },
+            '&::before': {
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+                    theme.palette.getContrastText(theme.palette.primary.main),
+                )}" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>')`,
+                left: 12,
+            },
+            '&::after': {
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+                    theme.palette.getContrastText(theme.palette.primary.main),
+                )}" d="M19,13H5V11H19V13Z" /></svg>')`,
+                right: 12,
+            },
+        },
+        '& .MuiSwitch-thumb': {
+            boxShadow: 'none',
+            width: 16,
+            height: 16,
+            margin: 2,
+        },
+    }));
+
     return (
         <div>
             <Button variant="outlined" onClick={handleClickOpen}>
@@ -173,18 +206,18 @@ function Salespeople() {
                         />
 
 
+                        <FormControlLabel
+                            name='IsActive'
+                            control={
+                                <Android12Switch
+                                    checked={values.IsActive === 1}
+                                    onChange={() => formik.setFieldValue('IsActive', values.IsActive === 1 ? 0 : 1)}
+                                />
+                            }
 
+                        />
                     </DialogContent>
-                    <Switch
-
-                        id="IsActive"
-                        name='IsActive'
-
-                        checked={values.IsActive}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        inputProps={{ 'aria-label': 'controlled' }}
-                    />
+                   
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
                         <Button type="submit">{update ? 'Update' : 'Add'}</Button>
@@ -207,4 +240,3 @@ function Salespeople() {
 }
 
 export default Salespeople;
-

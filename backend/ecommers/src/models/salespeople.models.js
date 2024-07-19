@@ -17,15 +17,15 @@ const getsalespeople = async () => {
     }
 }
 
-const postsalespeople = async (city, sname, comm) => {
+const postsalespeople = async (city, sname, comm,IsActive) => {
     try {
 
-        const [result] = await pool.execute("INSERT INTO salespeople (city, sname,comm) VALUES (?,?,?)",
-            [city, sname, comm]);
+        const [result] = await pool.execute("INSERT INTO salespeople (city, sname,comm,IsActive) VALUES (?,?,?,?)",
+            [city, sname, comm,IsActive]);
 
 
         // console.log(result);
-        return { city, sname, comm, snum: result.insertId }
+        return { city, sname, comm,IsActive, snum: result.insertId }
 
 
 
@@ -46,9 +46,9 @@ const deletesalespeople = async (snum) => {
 }
 
 
-const updatesalespeople = async (snum, city, sname, comm) => {
+const updatesalespeople = async (snum, city, sname, comm,IsActive) => {
     try {
-        const [result] = await pool.execute("UPDATE salespeople SET city=?, sname=?, comm  =? WHERE SNUM=?", [city, sname, comm, snum]);
+        const [result] = await pool.execute("UPDATE salespeople SET city=?, sname=?, comm  =? ,IsActive =? , WHERE SNUM=?", [city, sname, comm, snum,IsActive]);
         console.log(result);
         return result;
     } catch (error) {

@@ -25,9 +25,9 @@ const listSalespeople = async (req, res) => {
 
 const addsalespeople = async (req, res) => {
     try {
-        const { city, sname, comm } = req.body
+        const { city, sname, comm,IsActive } = req.body
 
-        const salespeople = await Salespeople.postsalespeople(city, sname, comm);
+        const salespeople = await Salespeople.postsalespeople(city, sname, comm,IsActive);
         // console.log(salespeople);
 
         res.status(201).json({
@@ -72,8 +72,8 @@ const deletesalespeople = async (req, res) => {
 const updatesalespeople = async (req, res) => {
     try {
         const { snum } = req.params;
-        const { city, sname, comm } = req.body
-        const salespeople = await Salespeople.updatesalespeople(snum, city, sname, comm);
+        const { city, sname, comm,IsActive } = req.body
+        const salespeople = await Salespeople.updatesalespeople(snum, city, sname, comm,IsActive);
         res.status(200).json({
             success: true,
             data: salespeople,
