@@ -36,8 +36,9 @@ routes.get('/googlelogin',
   routes.get('/google/callback', 
     passport.authenticate('google', { failureRedirect: '/login' }),
     function(req, res) {
+        console.log("google login successfull");
       // Successful authentication, redirect home.
-      res.redirect('/');
+      res.send('<h1>okkk</h1>');
     });
 
 module.exports = routes;
