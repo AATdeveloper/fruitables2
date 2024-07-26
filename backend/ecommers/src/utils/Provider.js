@@ -8,9 +8,7 @@ const Googleprovider = async () => {
     try {
 
         await passport.use(new GoogleStrategy({
-            // clientID: "281020566988-6piiobo4fvui6pts6qq24spquhqngk3i.apps.googleusercontent.com",
-            // clientSecret: "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",
-            // callbackURL: "http://localhost:8000/api/v1/users/google/callback"
+            
         },
             async function (accessToken, refreshToken, profile, cb) {
 
