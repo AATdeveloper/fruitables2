@@ -77,27 +77,27 @@ const generateAuthToken = async (id) => {
         const user = await Users.findById(id);
 
 
-        const accrestoken = jwt.sign({
+        const accessToken = jwt.sign({
             _id: user._id,
             role: user.role
         }, "abc123",
             { expiresIn:"1 hour" });
 
-        console.log("accrestoken::::::::", accrestoken);
+        console.log("accessToken::::::::", accessToken);
 
-        const refretoken = await jwt.sign({
+        const refreshToken = await jwt.sign({
             _id: id
         },
             "123abc",
             { expiresIn: "2d" });
 
-        console.log("refretokenrefretoken", refretoken);
+        console.log("refreshTokenrefreshToken", refreshToken);
 
-        user.refretoken = refretoken
+        user.refreshToken = refreshToken
 
         await user.save({ validateBeforeSave: false });
 
-        return { accrestoken, refretoken }
+        return { accessToken, refreshToken }
     } catch (error) {
         console.log(error);
     }
@@ -129,11 +129,11 @@ const login = async (req, res) => {
             })
         }
 
-        const { accrestoken, refretoken } = await generateAuthToken(user._id);
-        console.log("accrestoken!!!!!!!!!!!1", accrestoken);
-        console.log("refretoken!!!!!!!!!!!!", refretoken);
+        const { accessToken, refreshToken } = await generateAuthToken(user._id);
+        console.log("accessToken!!!!!!!!!!!1", accessToken);
+        console.log("refreshToken!!!!!!!!!!!!", refreshToken);
 
-        const newdataf = await Users.findById({ _id: user._id }).select("-password -refretoken");
+        const newdataf = await Users.findById({ _id: user._id }).select("-password -refreshToken");
 
         const option = {
             httpOnly: true,
@@ -142,12 +142,12 @@ const login = async (req, res) => {
 
 
         res.status(200)
-            .cookie("accrestoken", accrestoken, option)
-            .cookie("refretoken", refretoken, option)
+            .cookie("accessToken", accessToken, option)
+            .cookie("refreshToken", refreshToken, option)
             .json({
                 success: true,
                 message: "login successfully",
-                data: { ...newdataf.toObject(), accrestoken }
+                data: { ...newdataf.toObject(), accessToken }
             })
 
 
@@ -160,7 +160,7 @@ const login = async (req, res) => {
 const getnewtoken = async (req, res) => {
     try {
         
-        const cheackToken = await jwt.verify(req.cookies.refretoken, "123abc")
+        const cheackToken = await jwt.verify(req.cookies.refreshToken, "123abc")
 
         console.log("cheackToken", cheackToken);
 
@@ -182,9 +182,9 @@ const getnewtoken = async (req, res) => {
             })
         }
 
-        const { accrestoken, refretoken } = await generateAuthToken(user._id);
+        const { accessToken, refreshToken } = await generateAuthToken(user._id);
 
-        console.log({ "accessToken, refreshtoken": accrestoken, refretoken });
+        console.log({ "accessToken, refreshtoken": accessToken, refreshToken });
 
 
         const option = {
@@ -194,12 +194,12 @@ const getnewtoken = async (req, res) => {
 
 
         res.status(200)
-            .cookie("accrestoken", accrestoken, option)
-            .cookie("refretoken", refretoken, option)
+            .cookie("accessToken", accessToken, option)
+            .cookie("refreshToken", refreshToken, option)
             .json({
                 success: true,
                 message: "genrate new token",
-                data: { accrestoken }
+                data: { accessToken }
             })
 
     } catch (error) {
@@ -207,4 +207,41 @@ const getnewtoken = async (req, res) => {
     }
 }
 
-module.exports = { userpost, login, getnewtoken }
+
+const logout = async (req, res) => {
+    try {
+        console.log(req.body._id);
+        const user = await Users.findByIdAndUpdate(
+            req.body._id,
+            {
+                $unset:{refreshToken:1}
+          
+            },
+            {
+                new: true,
+            }
+        )
+        if (!user) { 
+         return  res.status(400).json({
+            success: false,
+            message: "user not logged out.",
+        });
+
+        }
+        res.status(200).json({
+            success: true,
+            message: "user logged out successfully.",
+        });
+       
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error.",
+        });
+    }
+
+}
+
+module.exports = { userpost, login, getnewtoken, logout }

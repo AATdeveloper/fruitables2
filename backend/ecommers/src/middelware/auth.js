@@ -40,7 +40,7 @@ const auth = (roles = []) => async (req, res, next) => {
 
             console.log("okkkk");
 
-            req.user = user
+            req.user = user;
 
             next();
 
@@ -60,3 +60,7 @@ const auth = (roles = []) => async (req, res, next) => {
 }
 
 module.exports = auth;
+
+
+// "email":"balboa2@gmail.com",
+// "password":"balboa123"

@@ -11,9 +11,9 @@ const usersRoute = require("./users.routs");
 
 routes.use("/categories", categoriesRoute)
 routes.use("/subcategories", subcategoriesRoute)
-routes.use("/products",productsRoute)
-routes.use("/salespeople",salespeopleRoute)
-routes.use("/users",usersRoute)
+routes.use("/products", productsRoute)
+routes.use("/salespeople", salespeopleRoute)
+routes.use("/users", usersRoute)
 // routes.use("/variants",variantsRoute)
 
 
