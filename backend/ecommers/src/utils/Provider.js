@@ -8,7 +8,7 @@ const Googleprovider = async () => {
     try {
 
         await passport.use(new GoogleStrategy({
-            
+             
         },
             async function (accessToken, refreshToken, profile, cb) {
 
