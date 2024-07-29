@@ -32,13 +32,25 @@ routes.post(
 
 routes.get('/googlelogin',
     passport.authenticate('google', { scope: ['profile', 'email'] }));
-  
-  routes.get('/google/callback', 
+
+routes.get('/google/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
-    function(req, res) {
+    function (req, res) {
         console.log("google login successfull");
-      // Successful authentication, redirect home.
-      res.send('<h1>okkk</h1>');
+        // Successful authentication, redirect home.
+        res.send('<h1>okkk</h1>');
+    });
+
+
+
+routes.get('/facebookLogin',
+    passport.authenticate('facebook', { scope: ['public_profile', 'email'] }));
+
+routes.get('/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/login' }),
+    (req, res) => {
+        console.log("Facebook login successful");
+        res.send("<h1>Facebook login successful</h1>");
     });
 
 module.exports = routes;

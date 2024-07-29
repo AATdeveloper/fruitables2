@@ -5,6 +5,7 @@ const cors = require('cors');
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const Googleprovider = require("./utils/Provider");
+const facebookProvider = require("./utils/Provider");
 
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(passport.session());
 
 connectDB()
 Googleprovider()
+facebookProvider()
 
 app.use("/api/v1", routes)
 
