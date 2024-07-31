@@ -1,4 +1,5 @@
 var nodemailer = require('nodemailer');
+const exportpdfmake = require('./pdfmake');
 
 const sendMail = async (regestermail) => {
 
@@ -13,6 +14,7 @@ const sendMail = async (regestermail) => {
       pass: 'oyimdxvdbxjmezec'
     }
   });
+  exportpdfmake()
 
   var mailOptions = {
     from: 'taiamin465@gmail.com',
@@ -36,12 +38,17 @@ const sendMail = async (regestermail) => {
         filename: 'image4.jpg',
         path: './src/utils/Image/harley-davidson.jpg' 
       },
+      {
+        filename: 'document.pdf',
+        path: './src/utils/PDF/document.pdf' // Exported PDF file
 
+
+      }
 
     ]
 
   };
-
+// const jr = require('../utils/PDF/')
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error);

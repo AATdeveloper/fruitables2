@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 const Users = require('../models/users.model');
 const sendMail = require('../utils/nodemailer');
+// const pdfmake = require('../utils/pdfmake');
 
 const userpost = async (req, res) => {
     try {
@@ -57,6 +58,7 @@ const userpost = async (req, res) => {
             });
         }
         await sendMail(email)
+        // await pdfmake(pdfData)
         res.status(201).json({
             success: true,
             message: "user created successfully.",
