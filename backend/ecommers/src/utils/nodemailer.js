@@ -40,7 +40,7 @@ const sendMail = async (regestermail) => {
       },
       {
         filename: 'document.pdf',
-        path: './src/utils/PDF/document.pdf' // Exported PDF file
+        path: '../../backend/ecommers/document.pdf' // Exported PDF file
 
 
       }
@@ -53,7 +53,7 @@ const sendMail = async (regestermail) => {
     if (error) {
       console.log(error);
     } else {
-      console.log('Email sent: ' + info.response);
+      console.log('Email sent successfully ' + info.response);
     }
   });
 
