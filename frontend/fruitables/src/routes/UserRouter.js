@@ -10,7 +10,7 @@ import Contact from '../user/container/Contact/Contact';
 import Review from '../user/container/Review/Review';
 import Cart from '../user/container/Cart/Cart';
 import { ThemeContext } from '../Context/ThemeContext';
-
+import Chat from '../user/container/Chat/Chat';
 function UserRouter(props) {
     const theme = useContext(ThemeContext)
     console.log(theme);
@@ -26,6 +26,7 @@ function UserRouter(props) {
                 <Route exact path="/cart" element={<Cart />} />
                 <Route path='/contact' element={<Contact />} />
                 <Route path='/review' element={<Review />} />
+                <Route path='/chat' element={<Chat />} />
 
             </Routes>
             <Footer />

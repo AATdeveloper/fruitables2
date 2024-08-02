@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const Googleprovider = require("./utils/Provider");
 const facebookProvider = require("./utils/Provider");
+const connectchat = require("./utils/socketIO");
 
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(passport.session());
 connectDB()
 Googleprovider()
 facebookProvider()
+connectchat()
 
 app.use("/api/v1", routes)
 

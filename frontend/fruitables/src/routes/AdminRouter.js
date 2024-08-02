@@ -31,6 +31,7 @@ function AdminRouter(props) {
                     <Route exact path="/contact" element={<Contact />} />
                     <Route exact path="/variant" element={<Variants />} />
                     <Route exact path="/salespeople" element={<Salespeople />} />
+                   
              
 
                 </Routes> 
