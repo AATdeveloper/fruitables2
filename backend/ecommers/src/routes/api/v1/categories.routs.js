@@ -1,5 +1,8 @@
 const express = require("express");
 const { categoriescontroller } = require("../../../controller");
+const validation = require("../../../middelware/validation");
+const { categoryvalidation } = require("../../../Validation");
+
 // const auth = require("../../../middelware/auth");
 
 const routes = express.Router();
@@ -11,8 +14,10 @@ routes.get(
 )
 
 routes.post('/categories-add',
+    validation(categoryvalidation.categoryadd),
     categoriescontroller.addcategories
 )
+
 
 routes.put('/categories-update/:category_id',
     categoriescontroller.updatecategories
