@@ -25,34 +25,62 @@ const listcategories = async (req, res) => {
         })
     }
 }
-const getcategories = async () => {
-
-}
-const addcategories = async (req, res) => {
+const getcategories = async (req, res) => {
     try {
 
+        console.log(req.params.category_id);
 
-        const category = await Categories.create(req.body)
-        // console.log(category);
+        const category = await Categories.findById(req.params.category_id);
+        console.log(category);
+
 
         if (!category) {
-            res.status(400).json({
+            res.status(404).json({
                 success: false,
-                message: "Category not Created"
+                message: "Category not found"
             })
         }
 
-        res.status(201).json({
+        res.status(200).json({
             success: true,
-            message: "Category Created succesfully",
+            message: "Category fetched sucessfully",
             data: category
         })
+
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: "internal server error" + error.message
+            message: "internal server error:" + error.message
         })
     }
+}
+const addcategories = async (req, res) => {
+    console.log("qdoisoidhoioid", req.body);
+    
+    // try {
+
+
+    //     const category = await Categories.create(req.body)
+    //     // console.log(category);
+
+    //     if (!category) {
+    //         res.status(400).json({
+    //             success: false,
+    //             message: "Category not Created"
+    //         })
+    //     }
+
+    //     res.status(201).json({
+    //         success: true,
+    //         message: "Category Created succesfully",
+    //         data: category
+    //     })
+    // } catch (error) {
+    //     res.status(500).json({
+    //         success: false,
+    //         message: "internal server error" + error.message
+    //     })
+    // }
 }
 const deletecategories = async (req, res) => {
     try {

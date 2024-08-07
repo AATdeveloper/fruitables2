@@ -13,6 +13,13 @@ routes.get(
     categoriescontroller.listcategories
 )
 
+routes.get(
+    '/categories-get/',
+    // auth(["Admin"]),
+    validation(categoryvalidation.categoryget),
+    categoriescontroller.getcategories
+)
+
 routes.post('/categories-add',
     validation(categoryvalidation.categoryadd),
     categoriescontroller.addcategories
@@ -20,10 +27,12 @@ routes.post('/categories-add',
 
 
 routes.put('/categories-update/:category_id',
+    validation(categoryvalidation.categoryupdate),
     categoriescontroller.updatecategories
 )
 
 routes.delete('/categories-delete/:category_id',
+    validation(categoryvalidation.categorydelete),
     categoriescontroller.deletecategories
 )
 
