@@ -11,7 +11,7 @@ const sendMail = async (regestermail) => {
     secure: true,
     auth: {
       user: 'taiamin465@gmail.com',
-      pass: 'oyimdxvdbxjmezec'
+      pass: process.env.NODEMAILER_USER_PASSWORD_URL
     }
   });
   exportpdfmake()

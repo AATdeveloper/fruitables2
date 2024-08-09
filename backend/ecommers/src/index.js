@@ -1,11 +1,12 @@
+require('dotenv').config()
+
 const express = require("express")
 const routes = require("./routes/api/v1/index");
 const connectDB = require("./db/mongoDb");
 const cors = require('cors');
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
-const Googleprovider = require("./utils/Provider");
-const facebookProvider = require("./utils/Provider");
+const {Googleprovider, facebookProvider} = require("./utils/Provider");
 const connectchat = require("./utils/socketIO");
 
 

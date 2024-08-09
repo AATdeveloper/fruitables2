@@ -84,16 +84,17 @@ const generateAuthToken = async (id) => {
         const accessToken = jwt.sign({
             _id: user._id,
             role: user.role
-        }, "abc123",
-            { expiresIn:"1 hour" });
+        },process.env.ACESS_TOKEN_URL ,
+
+{ expiresIn: process.env.ACESS_TOKEN_EXPIRY_URL});
 
         console.log("accessToken::::::::", accessToken);
 
         const refreshToken = await jwt.sign({
             _id: id
         },
-            "123abc",
-            { expiresIn: "2d" });
+        process.env.REFRESH_TOKEN_URL,
+            { expiresIn: process.env.REFRESH_TOKEN_EXPIRY_URL });
 
         console.log("refreshTokenrefreshToken", refreshToken);
 

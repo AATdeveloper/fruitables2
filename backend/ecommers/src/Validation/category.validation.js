@@ -28,8 +28,9 @@ const categoryupdate = {
 const categoryget = {
 
     query: Joi.object().keys({
-       category_id: Joi.string().max(5).required(),
-
+        name: Joi.string().required().max(30).uppercase().trim(),
+        description: Joi.string().required().max(100),
+        image: Joi.string().allow(''),
     }),
 
 }

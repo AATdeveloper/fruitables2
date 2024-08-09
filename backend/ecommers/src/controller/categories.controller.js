@@ -1,11 +1,25 @@
 const Categories = require("../models/categories.models")
 
 const listcategories = async (req, res) => {
+    
+    // localhost:8000/api/v1/categories/categories-list?page=1&pageSize=3
 
-    console.log("catgree", req.user);
+    console.log("cateee", req.query.page, req.query.pageSize);
+
     try {
+        const page = parseInt(req.query.page);
+        const pageSize = parseInt(req.query.pageSize);
+
+        if (page <= 0 || pageSize <= 0) {
+            res.status(400).json({
+                success: false,
+                message: "page or pageSize must be grater than zero"
+            })
+        }
+
         const categories = await Categories.find();
 
+        console.log(categories);
         if (!categories || categories.length === 0) {
             res.status(404).json({
                 success: false,
@@ -13,15 +27,24 @@ const listcategories = async (req, res) => {
             })
         }
 
+        let startIndex = 0, endIndex = 0, pagination = 0;
+
+        if (page > 0 || pageSize > 0) {
+            startIndex = (page - 1) * pageSize;
+            endIndex = startIndex + pageSize;
+            pagination = categories.slice(startIndex,endIndex)
+        }
+
         res.status(200).json({
             success: true,
-            message: "categories fatech succesfully",
-            data: categories
+            totalData:categories.length,
+            message: "categories feched successfully",
+            data: pagination
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: "internal server error" + error.message
+            message: "internal server error:" + error.message
         })
     }
 }

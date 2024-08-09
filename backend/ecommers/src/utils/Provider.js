@@ -9,9 +9,9 @@ const Googleprovider = async () => {
     try {
 
         await passport.use(new GoogleStrategy({
-            clientID: "281020566988-6piiobo4fvui6pts6qq24spquhqngk3i.apps.googleusercontent.com",
-            clientSecret: "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",
-            callbackURL: "http://localhost:8000/api/v1/users/google/callback"
+            clientID: process.env.PROVIDER_GOOGLE_CLINT_ID_URL,
+            clientSecret: process.env.PROVIDER_GOOGLE_CLINT_SECRET_URL,
+            callbackURL: process.env.PROVIDER_GOOGLE_CALLBACK_URL
         },
             async function (accessToken, refreshToken, profile, cb) {
 
@@ -69,9 +69,9 @@ console.log("kkkkkk",error);
 
 const facebookProvider = () => {
     passport.use(new FacebookStrategy({
-        clientID: "3744927445772566",
-        clientSecret: "86a431b73f57e9ec0ff2b35b64b782ff",
-        callbackURL: "http://localhost:8000/api/v1/users/facebook/callback",
+        clientID: process.env.PROVIDER_FACEBOOK_CLINT_ID_URL,
+        clientSecret: process.env.PROVIDER_FACEBOOK_CLINT_SECRET_URL,
+        callbackURL: process.env.PROVIDER_FACEBOOK_CALLBACK_URL,
         profileFields: ['id', 'displayName', 'emails']
     },
     async (accessToken, refreshToken, profile, cb) => {
@@ -112,5 +112,4 @@ const facebookProvider = () => {
 
 
 
-module.exports = Googleprovider;
-module.exports = facebookProvider;
+module.exports = {Googleprovider, facebookProvider};

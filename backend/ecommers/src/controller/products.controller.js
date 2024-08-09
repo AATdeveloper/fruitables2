@@ -1,3 +1,4 @@
+// const { pipeline } = require("nodemailer/lib/xoauth2");
 const Products = require("../models/products.models");
 const uploadFiles = require("../utils/cloudinary");
 
@@ -257,7 +258,111 @@ const Topratedpro = async (req, res) => {
 }
 
 
+const Search = async (req, res) => {
+    // localhost:8000/api/v1/products/Search?sortOrder=asc&rating=4&max=10000&min=0&category=1&page=2&limit=1
+    try {
+        const { sortOrder, rating, max, min, category, page, limit } = req.query
 
+        let p = parseInt(page);
+        let l = parseInt(limit);
+
+        const matchPip = {}
+
+        if (rating) {
+            matchPip['avgRating'] = { "$gte": rating }
+        }
+        if (category) {
+            matchPip['category_id'] = category
+        }
+
+        matchPip['variant.attributes.Price'] = {}
+
+        if (min != undefined) {
+            matchPip['variant.attributes.Price'].$gt = min
+        }
+
+        if (max != undefined) {
+            matchPip['variant.attributes.Price'].$lte = max
+        }
+
+        // console.log(matchPip);
+
+        const pipline = [
+            {
+              $lookup: {
+                from: 'variants',
+                localField: '_id',
+                foreignField: 'product_id',
+                as: 'variant'
+              }
+            },
+            {
+              $lookup: {
+                from: 'reviews',
+                localField: '_id',
+                foreignField: 'product_id',
+                as: 'review'
+              }
+            },
+            {
+              $addFields: {
+                avgrating:'$review.rating'
+              }
+            },
+            {
+              $unwind: {
+                path: '$variant',
+                
+              }
+            },
+            {
+              $match: {
+                   avgrating:{$gte:4},
+                category_id:1,
+                'variant.attributes.Price':{$gte:0 , $lte:2000}
+              }
+            },
+            {
+              $group: {
+                _id: '$_id',
+                name:{$first:'$name'},
+               variant:{$push:"$variant"},
+                review:{$push:"$review"}
+                }
+            },
+            {
+              $sort: {
+                name: sortOrder === 'asc' ?1 : -1
+              }
+            }
+          ]
+
+        //   console.log(p,l);
+          
+        if (p > 0 && l > 0) {
+            pipline.push({ $skip: (p - 1) * l })
+            pipline.push({ $limit:  l })
+        }
+
+        // console.log(JSON.stringify(pipline));
+        
+
+        const data = await Products.aggregate(pipline)
+        // console.log(req.query)
+        // console.log(data);
+
+
+        res.status(400).json({
+            success : true,
+            message : "Product data fected",
+            data : data
+        })
+
+    } catch (error) {
+        console.log(error.message);
+
+    }
+}
 // const mostproducts = async (req, res) => {
 
 //     const activeCount = await Subcategories.aggregate([
@@ -299,7 +404,8 @@ module.exports = {
     addproducts,
     deleteproducts,
     updateproducts,
-    Topratedpro
+    Topratedpro,
+    Search
 }
 
 
