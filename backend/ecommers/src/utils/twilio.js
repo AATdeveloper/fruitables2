@@ -13,8 +13,8 @@ const sendOTP = (req, res, next) => {
         client.messages
             .create({
                 // body: otp,
-                // to: '+919909412186',
-                // from: '+12245325302',
+                // to: '',
+                // from: '',
             })
             .then(message => next())
             .catch(error => {
