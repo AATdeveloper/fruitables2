@@ -14,7 +14,7 @@ const app = express();
 app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
-app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(require('express-session')({ secret: process.env.EXPRESS_SESION_SECRET_KEY_URL, resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
