@@ -9,6 +9,7 @@ const sendMail = require('../utils/nodemailer');
 const userpost = async (req, res) => {
     try {
         console.log(req.body);
+        console.log(req.file);
 
         const { email, password } = req.body;
 
@@ -36,7 +37,7 @@ const userpost = async (req, res) => {
             });
         }
 
-        const newdata = await Users.create({ ...req.body, password: hashpassoword })
+        const newdata = await Users.create({ ...req.body, password: hashpassoword, avtar: req.file.path })
 
         console.log("newdata", newdata);
 
@@ -84,17 +85,17 @@ const generateAuthToken = async (id) => {
         const accessToken = jwt.sign({
             _id: user._id,
             role: user.role
-        },process.env.ACESS_TOKEN_URL ,
+        }, process.env.ACESS_TOKEN_URL,
 
-{ expiresIn: process.env.ACESS_TOKEN_EXPIRY_URL});
+            { expiresIn: 36000 });
 
         console.log("accessToken::::::::", accessToken);
 
         const refreshToken = await jwt.sign({
             _id: id
         },
-        process.env.REFRESH_TOKEN_URL,
-            { expiresIn: process.env.REFRESH_TOKEN_EXPIRY_URL });
+            process.env.REFRESH_TOKEN_URL,
+            { expiresIn: 36000 });
 
         console.log("refreshTokenrefreshToken", refreshToken);
 
@@ -135,8 +136,8 @@ const login = async (req, res) => {
         }
 
         const { accessToken, refreshToken } = await generateAuthToken(user._id);
-        console.log("accessToken!!!!!!!!!!!1", accessToken);
-        console.log("refreshToken!!!!!!!!!!!!", refreshToken);
+        console.log(accessToken);
+        console.log(refreshToken);
 
         const newdataf = await Users.findById({ _id: user._id }).select("-password -refreshToken");
 
@@ -164,8 +165,10 @@ const login = async (req, res) => {
 
 const getnewtoken = async (req, res) => {
     try {
-        
-        const cheackToken = await jwt.verify(req.cookies.refreshToken, "123abc")
+        console.log("dcecfsessssssssssssss", req.cookies.refreshToken);
+
+
+        const cheackToken = await jwt.verify(req.cookies.refreshToken, process.env.REFRESH_TOKEN_URL)
 
         console.log("cheackToken", cheackToken);
 
@@ -219,26 +222,26 @@ const logout = async (req, res) => {
         const user = await Users.findByIdAndUpdate(
             req.body._id,
             {
-                $unset:{refreshToken:1}
-          
+                $unset: { refreshToken: 1 }
+
             },
             {
                 new: true,
             }
         )
-        if (!user) { 
-         return  res.status(400).json({
-            success: false,
-            message: "user not logged out.",
-        });
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "user not logged out.",
+            });
 
         }
         res.status(200).json({
             success: true,
             message: "user logged out successfully.",
         });
-       
-        
+
+
     } catch (error) {
         console.error(error);
         res.status(500).json({

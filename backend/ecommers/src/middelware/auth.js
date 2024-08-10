@@ -17,7 +17,7 @@ const auth = (roles = []) => async (req, res, next) => {
         }
 
         try {
-            velidateToken = await jwt.verify(token, "abc123")
+            const velidateToken = await jwt.verify(token, "abc123")
             console.log(velidateToken);
 
             const user = await Users.findById(velidateToken._id);

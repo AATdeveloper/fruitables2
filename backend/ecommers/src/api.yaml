@@ -1,0 +1,216 @@
+openapi: 3.0.0
+info:
+  title: Fruitables
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 0.1.9
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local Server
+  - url: http://example.com
+    description: Optional server description, e.g. Internal staging server for testing
+
+components:
+  securitySchemes:
+    basicAuth:     # <-- arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormate: JWT
+security:
+  - basicAuth: [] 
+paths:
+  /users/useradd:
+    post:
+      summary: Returns a list of users.
+      description: Optional extended description in CommonMark or HTML.
+      tags:
+      - users
+      summary: Creates a user.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+                avtar:
+                  type: string
+                  format: binary
+      responses:
+        '200':    # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string
+                 
+  /users/login:
+    post:
+      summary: User login.
+      description: Optional extended description in CommonMark or HTML.
+      tags:
+      - users
+      summary: user login.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                
+      responses:
+        '200':    # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string
+  /users/logout:
+    post:
+      summary: user log out.
+      description: Optional extended description in CommonMark or HTML.
+      tags:
+      - users
+      summary: user login.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                _id:
+                  type: string
+               
+                
+      responses:
+        '200':    # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string
+  /users/get-newtoken:
+    post:
+      summary: you can get new refresh and generate token.
+      description: Optional extended description in CommonMark or HTML.
+      tags:
+      - users
+      summary: user login.
+      responses:
+        '200':    # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string
+  /users/googlelogin:
+    get:
+      summary: User googlelogin.
+      description: Optional extended description in CommonMark or HTML.
+      tags:
+      - users
+      responses:
+        '200':    # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string
+  /users/facebookLogin:
+    get:
+      summary: User googlelogin.
+      description: Optional extended description in CommonMark or HTML.
+      tags:
+      - users
+      responses:
+        '200':    # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string    
+  /categories/categories-list:
+    get:
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: PLEASE ENTER PAGE
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+          description: PLEASE ENTER PAGE SIZE
+      summary: categories-list.
+      description: Optional extended description in CommonMark or HTML.
+      tags:
+      - categories
+      responses:
+        '200':    # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string               
+  /categories/categories-update/{category_id}:
+    put:
+      parameters:
+        - in: path
+          name: category_id
+          required: true
+          schema:
+            type: string
+          description: PLEASE ENTER CATEGORY ID
+      summary: categories-list.
+      description: Optional extended description in CommonMark or HTML.
+      tags:
+      - categories
+      requestBody:
+        required: true
+        content:
+         application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+               
+      responses:
+        '200':    # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string    

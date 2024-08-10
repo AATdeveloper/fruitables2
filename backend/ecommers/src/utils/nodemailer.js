@@ -17,7 +17,7 @@ const sendMail = async (regestermail) => {
   exportpdfmake()
 
   var mailOptions = {
-    from: 'taiamin465@gmail.com',
+    from: 'balboa@gmail.com',
     to: regestermail, //'dhavalvadher0001@gmail.com',
     subject: 'Sending Email using Node.js',
     text: 'Your Registration Is Done Successfullyy!',

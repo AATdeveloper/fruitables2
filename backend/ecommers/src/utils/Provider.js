@@ -5,7 +5,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 
 const Googleprovider = async () => {
-    console.log("Googleprovider");
+    // console.log("Googleprovider");
     try {
 
         await passport.use(new GoogleStrategy({
@@ -49,7 +49,7 @@ const Googleprovider = async () => {
 
         ));
     } catch (error) {
-console.log("kkkkkk",error);
+        console.log("kkkkkk", error);
     }
 
     passport.serializeUser(function (user, done) {
@@ -68,32 +68,34 @@ console.log("kkkkkk",error);
 }
 
 const facebookProvider = () => {
+    // console.log("facebookProvider");
+    
     passport.use(new FacebookStrategy({
         clientID: process.env.PROVIDER_FACEBOOK_CLINT_ID_URL,
         clientSecret: process.env.PROVIDER_FACEBOOK_CLINT_SECRET_URL,
         callbackURL: process.env.PROVIDER_FACEBOOK_CALLBACK_URL,
         profileFields: ['id', 'displayName', 'emails']
     },
-    async (accessToken, refreshToken, profile, cb) => {
-        console.log(profile);
-        try {
-            const email = profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null;
+        async (accessToken, refreshToken, profile, cb) => {
+            console.log(profile);
+            try {
+                const email = profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null;
 
-            let user = await Users.findOne({ facebookId: profile.id });
-            if (!user) {
-                user = await Users.create({
-                    name: profile.displayName,
-                    email: email,
-                    facebookId: profile.id,
-                    role: "user"
-                });
+                let user = await Users.findOne({ facebookId: profile.id });
+                if (!user) {
+                    user = await Users.create({
+                        name: profile.displayName,
+                        email: email,
+                        facebookId: profile.id,
+                        role: "user"
+                    });
+                }
+                return cb(null, user);
+            } catch (error) {
+                console.error('Error in Facebook strategy', error);
+                return cb(error, null);
             }
-            return cb(null, user);
-        } catch (error) {
-            console.error('Error in Facebook strategy', error);
-            return cb(error, null);
-        }
-    }));
+        }));
 
     passport.serializeUser((user, done) => {
         done(null, user.id);
@@ -112,4 +114,4 @@ const facebookProvider = () => {
 
 
 
-module.exports = {Googleprovider, facebookProvider};
+module.exports = { Googleprovider, facebookProvider };
