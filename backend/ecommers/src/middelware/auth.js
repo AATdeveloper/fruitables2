@@ -5,6 +5,8 @@ const Users = require('../models/users.model');
 
 const auth = (roles = []) => async (req, res, next) => {
     try {
+        console.log(roles);
+        
         const token = req.cookies.accrestoken || req.header("Authorization")?.replace("Bearer", "");
 
         console.log(token);

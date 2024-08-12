@@ -95,11 +95,11 @@ function Header(props) {
                                 </div>
                                 <div className="nav-item dropdown main">
                                     <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Products</a>
-                                    <div className="dropdown-menu m-0 bg-secondary rounded-0">
+                                    {/* <div className="dropdown-menu m-0 bg-secondary rounded-0">
                                         {categories.map((v) => (
                                             <a href="" onMouseMove={() => handleCategory(v._id)} onClick={() => handleCategory(v._id)} className="dropdown-item">{v.name}</a>
                                         ))}
-                                    </div>
+                                    </div> */}
                                     <div className="dropdown-menu m-0 bg-secondary rounded-0" id='subright'>
                                         {subcat.map((v) => (
                                             <a href="" onClick={() => handleDisplay(v._id)} className="dropdown-item">{v.name}</a>
@@ -116,9 +116,10 @@ function Header(props) {
                                         <span className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style={{ top: '-5px', left: 15, height: 20, minWidth: 20 }}>{total}</span>
                                     </a>
                                 </NavLink>
-                                <a href="#" className="my-auto">
+                                <NavLink   to={`/authform`}
+                                href="#" className="my-auto">
                                     <i className="fas fa-user fa-2x" />
-                                </a>
+                                </NavLink>
                             </div>
                             <>
                                 {

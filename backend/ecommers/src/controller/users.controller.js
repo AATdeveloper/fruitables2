@@ -9,7 +9,7 @@ const sendMail = require('../utils/nodemailer');
 const userpost = async (req, res) => {
     try {
         console.log(req.body);
-        console.log(req.file);
+        // console.log(req.file);
 
         const { email, password } = req.body;
 
@@ -37,8 +37,8 @@ const userpost = async (req, res) => {
             });
         }
 
-        const newdata = await Users.create({ ...req.body, password: hashpassoword, avtar: req.file.path })
-
+        const newdata = await Users.create({ ...req.body, password: hashpassoword })
+        // avtar: req.file.path
         console.log("newdata", newdata);
 
         if (!newdata) {

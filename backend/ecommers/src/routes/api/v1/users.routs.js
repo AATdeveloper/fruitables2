@@ -3,14 +3,14 @@ const { usersController } = require("../../../controller");
 const passport = require("passport");
 const sendMail = require("../../../utils/nodemailer");
 const pdfmake = require("../../../utils/pdfmake");
-const upload = require("../../../middelware/upload");
+// const upload = require("../../../middelware/upload");
 
 
 const routes = express.Router();
 
 routes.post(
     "/useradd",
-    upload.single("avtar"),
+    // upload.single("avtar"),
     usersController.userpost
 
 )

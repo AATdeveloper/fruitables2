@@ -11,6 +11,7 @@ import Review from '../user/container/Review/Review';
 import Cart from '../user/container/Cart/Cart';
 import { ThemeContext } from '../Context/ThemeContext';
 import Chat from '../user/container/Chat/Chat';
+import AuthForm from '../user/container/AuthForm/AuthForm';
 function UserRouter(props) {
     const theme = useContext(ThemeContext)
     console.log(theme);
@@ -27,6 +28,7 @@ function UserRouter(props) {
                 <Route path='/contact' element={<Contact />} />
                 <Route path='/review' element={<Review />} />
                 <Route path='/chat' element={<Chat />} />
+                <Route path='/authform' element={<AuthForm />} />
 
             </Routes>
             <Footer />
