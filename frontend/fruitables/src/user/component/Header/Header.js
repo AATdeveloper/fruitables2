@@ -7,6 +7,10 @@ import NightsStayIcon from '@mui/icons-material/NightsStay';
 import { getProducts } from '../../../redux/action/products.action';
 import { getData } from '../../../redux/action/category.action';
 import { getSubData } from '../../../redux/slice/subCategory.slice';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { logout } from '../../../redux/slice/auth.slice';
+import { IconButton } from '@mui/material';
+
 
 function Header(props) {
     const dispatch = useDispatch();
@@ -19,6 +23,12 @@ function Header(props) {
     const categories = useSelector((state) => state.categories.categories);
     const subcategories = useSelector((state) => state.subcategories.subcategories);
     const product = useSelector((state) => state.products.product);
+
+    const { isAuthentication , user } = useSelector(state => state.auth);
+
+    const handleLogout = () => {
+        dispatch(logout(user._id));
+    }
 
     // console.log(categories);
     // console.log(subcategories);
@@ -116,10 +126,22 @@ function Header(props) {
                                         <span className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style={{ top: '-5px', left: 15, height: 20, minWidth: 20 }}>{total}</span>
                                     </a>
                                 </NavLink>
-                                <NavLink   to={`/authform`}
-                                href="#" className="my-auto">
-                                    <i className="fas fa-user fa-2x" />
-                                </NavLink>
+                                {
+                                    isAuthentication ?
+                                    <IconButton onClick={handleLogout} className="position-relative me-4 my-auto">
+                                    <LogoutIcon/>
+                                  </IconButton>
+:
+                                        <NavLink to={`/authform`}
+                                            href="#" className="my-auto">
+                                            <i className="fas fa-user fa-2x" />
+                                        </NavLink>
+                                }
+
+
+
+
+
                             </div>
                             <>
                                 {

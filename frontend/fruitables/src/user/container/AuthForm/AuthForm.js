@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { object, string } from 'yup';
 import { useFormik } from 'formik';
-import { register } from '../../../redux/slice/auth.slice';
+import { login, register } from '../../../redux/slice/auth.slice';
 import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from "react-router-dom"
 
 
 const AuthForm = () => {
@@ -47,7 +48,9 @@ const AuthForm = () => {
           console.log("signup Page");
         } else if (formType === 'login') {
             console.log("login Page");
+            dispatch(login(values))
         } else if (formType === 'forgot') {
+          
             console.log("forgot Page");
         }
         resetForm();
@@ -59,6 +62,11 @@ const AuthForm = () => {
 
   const { handleSubmit, handleChange, handleBlur, errors, touched, values } = formik;
 
+
+  if (auth.isAuthentication) {
+    return <Navigate to= "/"/>
+
+  }
   const renderSignupForm = () => (
     <form onSubmit={handleSubmit}>
       <h2>Sign Up</h2>
